@@ -5,6 +5,7 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 
 from .models import BloodRequest, DonationHistory
 from .serializers import BloodRequestSerializer, DonationHistorySerializer
@@ -12,7 +13,7 @@ from .serializers import BloodRequestSerializer, DonationHistorySerializer
 # Create your views here.
 
 
-class BloodRequestView(APIView):
+class BloodRequestViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -39,7 +40,7 @@ class BloodRequestView(APIView):
         return Response(serializer.errors, status=400)
 
 
-class DonationHistoryListCreateView(APIView):
+class DonationHistoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

@@ -1,12 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import BloodRequestViewSet, DonationHistoryViewSet
 
-from . import views
+router = DefaultRouter()
+router.register("requests", BloodRequestViewSet, basename="bloodrequest")
+router.register("history", DonationHistoryViewSet, basename="donationhistory")
 
 urlpatterns = [
-    path("post/", views.BloodRequestView.as_view(), name="bloodrequestpost"),
-    path(
-        "history/",
-        views.DonationHistoryListCreateView.as_view(),
-        name="donationhistory",
-    ),
+    path("", include(router.urls)),
 ]

@@ -2,17 +2,20 @@ from django.contrib.auth import authenticate, get_user_model, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMultiAlternatives
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from rest_framework import viewsets
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from . import models, serializers
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+
+
+from . import serializers
 from .serializers import UserLoginSerializer
 
 # Create your views here.
@@ -79,15 +82,9 @@ class UserLogin(APIView):
         return Response(serializer.errors, status=400)
 
 
-class UserLogout(APIView):
-    def get(self, request):
-        if request.user.is_authenticated:
-            try:
-                Token.objects.get(user=request.user).delete()
-            except Token.DoesNotExist:
-                pass
-
-            logout(request)
-            return redirect("login")
-        else:
-            return HttpResponse("You are not logged in.", status=401)
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def UserLogout(request):
+    request.auth.delete()            
+    logout(request)
+    return Response(status=status.HTTP_204_NO_CONTENT)

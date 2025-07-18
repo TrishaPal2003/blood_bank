@@ -1,0 +1,37 @@
+[16/Jul/2025 11:31:42] "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+#########
+RegistrationSerializer(data={'username': 'mamun', 'email': 'mamun700263@gmail.com', 'password': '12345main'}):
+    username = CharField(help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, validators=[<django.contrib.auth.validators.UnicodeUsernameValidator object>, <UniqueValidator(queryset=User.objects.all())>])
+    first_name = CharField(allow_blank=True, max_length=150, required=False)
+    last_name = CharField(allow_blank=True, max_length=150, required=False)
+    email = EmailField(allow_blank=True, label='Email address', max_length=254, required=False)
+    password = CharField(max_length=128)
+    confirm_password = CharField(required=True)
+    blood_group = ChoiceField(choices=[('A+', 'A+'), ('A-', 'A-'), ('B+', 'B+'), ('B-', 'B-'), ('O+', 'O+'), ('O-', 'O-'), ('AB+', 'AB+'), ('AB-', 'AB-')])
+[16/Jul/2025 11:32:54] "POST /api/users/register/ HTTP/1.1" 200 90
+#########
+RegistrationSerializer(data={'username': 'mamun', 'email': 'mamun700263@gmail.com', 'password': '12345main'}):
+    username = CharField(help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, validators=[<django.contrib.auth.validators.UnicodeUsernameValidator object>, <UniqueValidator(queryset=User.objects.all())>])
+    first_name = CharField(allow_blank=True, max_length=150, required=False)
+    last_name = CharField(allow_blank=True, max_length=150, required=False)
+    email = EmailField(allow_blank=True, label='Email address', max_length=254, required=False)
+    password = CharField(max_length=128)
+    confirm_password = CharField(required=True)
+    blood_group = ChoiceField(choices=[('A+', 'A+'), ('A-', 'A-'), ('B+', 'B+'), ('B-', 'B-'), ('O+', 'O+'), ('O-', 'O-'), ('AB+', 'AB+'), ('AB-', 'AB-')])
+[16/Jul/2025 11:33:10] "POST /api/users/register/ HTTP/1.1" 200 90
+[16/Jul/2025 11:33:47] "GET /admin/auth/user/ HTTP/1.1" 200 14557
+[16/Jul/2025 11:33:47] "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+#########
+RegistrationSerializer(data=<QueryDict: {'csrfmiddlewaretoken': ['BecQryANbD1cGd60558AOxDQlfyutHrBCfNy9OrA7OySjDG3wAlUmbLI0xqybP70'], 'username': ['mamun'], 'first_name': ['Abdullah ALL'], 'last_name': ['Mamun'], 'email': ['mamun700263@gmail.com'], 'password': ['12345main'], 'confirm_password': ['12345main'], 'blood_group': ['A+']}>):
+    username = CharField(help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, validators=[<django.contrib.auth.validators.UnicodeUsernameValidator object>, <UniqueValidator(queryset=User.objects.all())>])
+    first_name = CharField(allow_blank=True, max_length=150, required=False)
+    last_name = CharField(allow_blank=True, max_length=150, required=False)
+    email = EmailField(allow_blank=True, label='Email address', max_length=254, required=False)
+    password = CharField(max_length=128)
+    confirm_password = CharField(required=True)
+    blood_group = ChoiceField(choices=[('A+', 'A+'), ('A-', 'A-'), ('B+', 'B+'), ('B-', 'B-'), ('O+', 'O+'), ('O-', 'O-'), ('AB+', 'AB+'), ('AB-', 'AB-')])
+mamun
+token ct16tf-b74f69cad3c347c6097b2fae20ac5491
+uid MjM
+[16/Jul/2025 11:34:31] "POST /api/users/register/ HTTP/1.1" 200 9491
+[16/Jul/2025 11:34:45] "GET /admin/auth/user/ HTTP/1.1" 200 15035

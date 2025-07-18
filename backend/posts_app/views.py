@@ -34,9 +34,7 @@ class BloodRequestViewSet(viewsets.ModelViewSet):
 
 
 class DonationHistoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Authenticated users see *their* donation history.
-    """
+    
     serializer_class = DonationHistorySerializer
     permission_classes = [permissions.IsAuthenticated]
 

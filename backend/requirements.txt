@@ -5,7 +5,6 @@ Babel
 bcc
 black
 blinker
-Brlapi
 certifi
 chardet
 click

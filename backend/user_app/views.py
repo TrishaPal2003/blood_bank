@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from django.urls import reverse_lazy
 
 
 from . import serializers
@@ -67,7 +68,7 @@ def activate(request, uid64, token):
 
 class UserLogin(APIView):
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=self.request.data)
         if serializer.is_valid():
             username = serializer.validated_data["username"]
             password = serializer.validated_data["password"]
@@ -83,9 +84,12 @@ class UserLogin(APIView):
         return Response(serializer.errors, status=400)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def UserLogout(request):
-    request.auth.delete()            
-    logout(request)
-    return Response(status=status.HTTP_204_NO_CONTENT)
+# @api_view(["POST"])
+# @permission_classes([IsAuthenticated])
+class UserLogout(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        # Simply delete the token to force a login
+        request.user.auth_token.delete()
+        return redirect(reverse_lazy('login'))

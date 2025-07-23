@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Register from './pages/Register';
 import Footer from './components/Footer';
+import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 
 
 
@@ -14,7 +16,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-         <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+
       </Routes>
        <Footer />
     </Router>

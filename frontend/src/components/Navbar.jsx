@@ -52,7 +52,7 @@ const Navbar = () => {
             ) : (
               <>
                 <li><Link to="/blood-request">Posts</Link></li>
-                <li><Link to="/blood-request">Blood Request</Link></li>
+                <li><Link to="/request-blood">Blood Request</Link></li>
                 <li><Link to="/donation-history">Donation History</Link></li>
                 <li><Link to="/login">Profile</Link></li>
                

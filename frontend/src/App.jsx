@@ -5,7 +5,8 @@ import About from './pages/About';
 import Register from './pages/Register';
 import Footer from './components/Footer';
 import Login from "./pages/Login";
-import Logout from "./pages/Logout";
+import BloodPostForm from "./pages/BloodPostForm";
+import Profile from './pages/Profile';
 
 
 
@@ -19,7 +20,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/bloodrquestform" element={<BloodPostForm />} />
+        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/posts" element={<Posts />} />  */}
 
       </Routes>
        <Footer />

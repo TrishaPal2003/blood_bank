@@ -16,6 +16,7 @@ export default function Login() {
         username,
         password,
       });
+      print(res)
       setAuthData(res.data.token, res.data.user_id);
       alert("Login successful!");
       window.location.href = "/"; // Redirect to homepage

@@ -2,20 +2,19 @@ import { useState } from "react";
 import axios from "axios";
 import { setAuthData } from "../services/auth";
 
-// import { loginUser } from "../services/auth";
-
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const Login = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
  
       const res = await axios.post("http://127.0.0.1:8000/api/users/login/", {
         username,
         password,
       });
+      console.log(res)
       setAuthData(res.data.token, res.data.user_id);
       alert("Login successful!");
       window.location.href = "/Profile"; 

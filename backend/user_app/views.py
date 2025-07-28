@@ -68,6 +68,7 @@ def activate(request, uid64, token):
 class UserLogin(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
+        print("#####")
         if serializer.is_valid():
             username = serializer.validated_data["username"]
             password = serializer.validated_data["password"]

@@ -1,87 +1,92 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import React, { useState } from 'react'
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-
-const Login = () => {
+export default function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const handleSubmit = () => {
-  const payload = {
-    username: username,  
-    password: password
+
+  const [form, setForm] = useState({
+    username: '',
+    password: '',
+  });
+
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  axios.post("http://127.0.0.1:8000/api/users/login/", payload)
-  .then((res) => {
-    const token = res.data.token;
+  const handleSubmit = async e => {
+    e.preventDefault();
 
-    if (token) {
-      localStorage.setItem("token", token); 
-      console.log("Token saved:", token);
-    } else {
-      console.warn("Token missing in response");
+    try {
+      const res = await axios.post('http://127.0.0.1:8000/api/users/login/', {
+        username: form.username,
+        password: form.password,
+      });
+      console.log(res);
+
+      if (res.status === 201 || res.status === 200) {
+        toast.success("Login successful!");
+        navigate('/Profile');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.detail || "Login failed");
     }
-
-    console.log("Login Successful", res.data);
-    navigate('/profile'); 
-  })
-  .catch((err) => {
-    console.error("Login Failed", err.response?.data || err.message);
-  });
-};
+  };
 
   return (
-      
     <div className="min-h-screen bg-red-100 flex items-center justify-center">
-  <div className="flex items-center justify-between w-[90%] max-w-5xl bg-white p-8 rounded-xl shadow-xl">
-   
-    <div className="w-1/2 pr-8">
-      <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">Login</h2>
+      <div className="flex items-center justify-between w-[90%] max-w-5xl bg-white p-8 rounded-xl shadow-xl">
+        <div className="w-1/2 pr-8">
+          <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">Login</h2>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Username</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Username</label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={form.username}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+                required
+              />
+            </div>
+
+
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full border px-3 py-2 rounded"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transition duration-200"
+            >
+              Login
+            </button>
+          </form>
         </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Password</label>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setPassword(e.target.value)}
+        <div className="w-1/2 flex justify-center">
+          <img
+            src="/login.png"
+            alt="login illustration"
+            className="min-h-[50vh] object-contain"
           />
         </div>
-
-        <button onClick={handleSubmit} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transition duration-200">
-          Login
-        </button>
       </div>
     </div>
-
-   
-    <div className="w-1/2 flex justify-center">
-      <img
-        src="/login.png"
-        alt=""
-        className="min-h-[50vh] object-contain"
-      />
-    </div>
-
-  </div>
-</div>
-
-  )
+  );
 }
-
-export default Login
-

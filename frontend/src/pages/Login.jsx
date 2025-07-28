@@ -1,39 +1,25 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { setAuthData } from "../services/auth";
+
+// import { loginUser } from "../services/auth";
+
 
 export default function Login() {
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [form, setForm] = useState({
-    username: '',
-    password: '',
-  });
-
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async e => {
+  const Login = async (e) => {
     e.preventDefault();
-
-    try {
-      const res = await axios.post('http://127.0.0.1:8000/api/users/login/', {
-        username: form.username,
-        password: form.password,
+ 
+      const res = await axios.post("http://127.0.0.1:8000/api/users/login/", {
+        username,
+        password,
       });
-      console.log(res);
-
-      if (res.status === 201 || res.status === 200) {
-        toast.success("Login successful!");
-        navigate('/Profile');
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.detail || "Login failed");
-    }
+      setAuthData(res.data.token, res.data.user_id);
+      alert("Login successful!");
+      window.location.href = "/Profile"; 
+   
   };
 
   return (
@@ -49,8 +35,8 @@ export default function Login() {
                 type="text"
                 name="username"
                 placeholder="Username"
-                value={form.username}
-                onChange={handleChange}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full border px-3 py-2 rounded"
                 required
               />
@@ -63,8 +49,8 @@ export default function Login() {
                 type="password"
                 name="password"
                 placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
+                value={password}
+                   onChange={(e) => setPassword(e.target.value)}
                 className="w-full border px-3 py-2 rounded"
                 required
               />

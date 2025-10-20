@@ -13,7 +13,9 @@ from rest_framework.views import APIView
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-
+from rest_framework import generics
+from .models import Account
+from .serializers import DonorSerializer
 
 from . import serializers
 from .serializers import UserLoginSerializer
@@ -89,3 +91,21 @@ def UserLogout(request):
     request.auth.delete()            
     logout(request)
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DonorListView(generics.ListAPIView):
+    serializer_class = DonorSerializer
+
+    def get_queryset(self):
+        queryset = Account.objects.filter(is_available=True)
+        blood_group = self.request.query_params.get('blood_group')
+        district = self.request.query_params.get('district')
+        donor_type = self.request.query_params.get('donor_type')
+
+        if blood_group:
+            queryset = queryset.filter(blood_group=blood_group)
+        if district:
+            queryset = queryset.filter(adress__icontains=district)
+
+        # donor_type logic can be added later (if you store that info)
+        return queryset

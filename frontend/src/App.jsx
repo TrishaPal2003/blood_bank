@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import BloodPostForm from './pages/BloodPostForm';
 import Profile from './pages/Profile';
 import Layout from './components/Layout'; 
+import SearchDonor from "./pages/SearchDonor";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="request-blood" element={<BloodPostForm />} />
           <Route path="profile" element={<Profile />} />
+          <Route path='search-donor' element={<SearchDonor/>} />
           <Route path="test" element={<h1>🔥 TEST BLOOD PAGE</h1>} />
 
           {/* 404 fallback for any unknown route */}

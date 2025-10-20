@@ -35,19 +35,19 @@ const Login = () => {
 
   return (
       
-    <div className="min-h-screen bg-red-100 flex items-center justify-center">
+    <div className="min-h-screen bg-red-50 flex items-center justify-center">
   <div className="flex items-center justify-between w-[90%] max-w-5xl bg-white p-8 rounded-xl shadow-xl">
    
     <div className="w-1/2 pr-8">
-      <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">Login</h2>
+      <h2 className="text-3xl font-bold text-red-700 mb-6 text-center">Login</h2>
 
       <div className="space-y-4">
         <div>
           <label className="block text-gray-700 font-medium mb-1">Username</label>
           <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="name"
+            placeholder="Enter your username"
+            className="w-full px-4 py-2 border border-gray-300 text-gray-600 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
@@ -57,12 +57,12 @@ const Login = () => {
           <input
             type="password"
             placeholder="Enter your password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 text-gray-600 bg-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
-        <button onClick={handleSubmit} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transition duration-200">
+        <button onClick={handleSubmit} className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-md shadow-md transition duration-200">
           Login
         </button>
       </div>

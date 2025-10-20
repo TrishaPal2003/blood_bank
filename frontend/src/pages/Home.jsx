@@ -13,7 +13,7 @@ const Home = () => {
 
 
         <div className="container">
-          <div className="flex flex-col md:flex-row min-h-[650px] items-center justify-between">
+          <div className="flex flex-col md:flex-row min-h-screen items-center justify-between">
          {/* Text container */}
         <div className='text-white max-w-[500px]'>
         <h1 className='text-5xl font-bold text-shadow'>Connect. Donate. Save Lives</h1>

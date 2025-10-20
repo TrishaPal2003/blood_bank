@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function RegisterForm() {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState({  
     username: '',
     email: '',
     password: '',
@@ -48,7 +48,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen bg-red-100 flex items-center justify-center">
+    <div className="min-h-screen bg-red-50 flex items-center justify-center">
       <div className="flex items-center justify-between w-[90%] max-w-5xl bg-white p-8 rounded-xl shadow-xl">
         <div className="w-1/2 pr-8">
           <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">Register</h2>
@@ -62,7 +62,7 @@ export default function RegisterForm() {
                 placeholder="Username"
                 value={form.username}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border bg-white px-3 py-2 rounded"
                 required
               />
             </div>
@@ -75,7 +75,7 @@ export default function RegisterForm() {
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border bg-white px-3 py-2 rounded"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ export default function RegisterForm() {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border bg-white px-3 py-2 rounded"
                 required
               />
             </div>
@@ -101,7 +101,7 @@ export default function RegisterForm() {
                 placeholder="Confirm Password"
                 value={form.confirm_password}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded"
+                className="w-full border px-3 bg-white py-2 rounded"
                 required
               />
             </div>
@@ -112,7 +112,7 @@ export default function RegisterForm() {
     name="blood_group"
     value={form.blood_group}
     onChange={handleChange}
-    className="w-full border px-3 py-2 rounded"
+    className="w-full border bg-white text-gray-500 px-3 py-2 rounded"
     required
   >
     <option value="">Select blood group</option>

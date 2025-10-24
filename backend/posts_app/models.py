@@ -1,33 +1,44 @@
 # Create your models here.
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
-
+from user_app.models import Location
 from user_app.constant import BLOOD_GROUP_CHOICE
 
 
 class BloodRequest(models.Model):
-    requester_name = models.CharField(max_length=50, blank=True, null=True)
-    requester_phone_number = models.IntegerField(blank=True, null=True)
+    hospital = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        limit_choices_to={'role': 'hospital'},
+        null=True,  # ✅ Add this temporarily
+        blank=True
+    )
     blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICE)
-    location = models.CharField(max_length=225)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     message = models.TextField()
-    latitude = models.DecimalField(
-        max_digits=9, decimal_places=6, null=True, blank=True
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Pending'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected'),
+            ('fulfilled', 'Fulfilled')
+        ],
+        default='pending'
     )
-    longitude = models.DecimalField(
-        max_digits=9, decimal_places=6, null=True, blank=True
-    )
-    time = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    bag_number = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.requester_name}"
+        return f"{self.hospital.username if self.hospital else 'Unknown'} - {self.blood_group} - {self.status}"
+
+
 
 
 class DonationHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICE)
     location = models.CharField(max_length=225)
     donate_date = models.DateField()
 
-    def __str__(self):
-        return f"{self.user.username}"
+    

@@ -1,14 +1,13 @@
-from .models import User, Account, Location
+from .model import User, Account, Location
 from rest_framework import serializers
-
 from .constant import BLOOD_GROUP_CHOICE
-from .models import Account, Location
+
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'district_name']
+        fields = ["id", "district_name"]
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -18,16 +17,21 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = [
-            'id', 'user', 'blood_group', 'adress', 'last_donation_date',
-            'is_available', 'location'
+            "id",
+            "user",
+            "blood_group",
+            "adress",
+            "last_donation_date",
+            "is_available",
+            "location",
         ]
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(required=True)
     blood_group = serializers.ChoiceField(choices=BLOOD_GROUP_CHOICE)
-    ROLE_CHOICES = ('donor', 'hospital', 'requester')  # Admin not self-assignable
-    role = serializers.ChoiceField(choices=ROLE_CHOICES, default='requester')
+    ROLE_CHOICES = ("donor", "hospital", "requester")  # Admin not self-assignable
+    role = serializers.ChoiceField(choices=ROLE_CHOICES, default="requester")
 
     class Meta:
         model = User
@@ -67,15 +71,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data, role=role)
 
         # Create Account only for donor, hospital, or requester
-        if role in ['donor', 'hospital', 'requester']:
+        if role in ["donor", "hospital", "requester"]:
             Account.objects.create(user=user, blood_group=blood_group)
 
         return user
 
+
 class EmailVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
-    
+
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
@@ -88,13 +93,12 @@ class LogoutSerializer(serializers.Serializer):
 
 
 class DonorSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.EmailField(source='user.email', read_only=True)
+    name = serializers.CharField(source="user.username", read_only=True)
+    email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
         model = Account
         fields = "__all__"
-
 
 
 class DonorAvailabilitySerializer(serializers.ModelSerializer):
@@ -103,6 +107,8 @@ class DonorAvailabilitySerializer(serializers.ModelSerializer):
         fields = ["is_available"]
 
     def update(self, instance, validated_data):
-        instance.is_available = validated_data.get("is_available", instance.is_available)
+        instance.is_available = validated_data.get(
+            "is_available", instance.is_available
+        )
         instance.save()
         return instance

@@ -12,7 +12,6 @@ from rest_framework import filters
 from user_app.utils import get_available_donors
 
 
-
 class BloodRequestViewSet(viewsets.ModelViewSet):
     queryset = BloodRequest.objects.all().order_by("-created_at")
     serializer_class = BloodRequestSerializer
@@ -26,8 +25,7 @@ class BloodRequestViewSet(viewsets.ModelViewSet):
 
         # Notify eligible donors
         donors = get_available_donors(
-            blood_group=blood_request.blood_group,
-            location=blood_request.location
+            blood_group=blood_request.blood_group, location=blood_request.location
         )
         for donor in donors:
             send_mail(
@@ -35,14 +33,16 @@ class BloodRequestViewSet(viewsets.ModelViewSet):
                 message=f"Hi {donor.username}, a hospital near you needs {blood_request.blood_group} blood.",
                 from_email="noreply@bloodbank.com",
                 recipient_list=[donor.email],
-                fail_silently=True
+                fail_silently=True,
             )
 
 
 class DonationHistoryViewSet(viewsets.ReadOnlyModelViewSet):
-    
+
     serializer_class = DonationHistorySerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return DonationHistory.objects.filter(user=self.request.user).order_by("-donate_date")
+        return DonationHistory.objects.filter(user=self.request.user).order_by(
+            "-donate_date"
+        )

@@ -1,5 +1,6 @@
 from datetime import date, timedelta
-from user_app.models import Account
+from user_app.model import Account
+
 
 def get_available_donors(blood_group=None, location=None):
     """
@@ -8,8 +9,7 @@ def get_available_donors(blood_group=None, location=None):
     """
     cutoff = date.today() - timedelta(days=90)
     qs = Account.objects.filter(
-        is_available=True,
-        donationhistory__donate_date__lte=cutoff
+        is_available=True, donationhistory__donate_date__lte=cutoff
     ).distinct()
 
     if blood_group:

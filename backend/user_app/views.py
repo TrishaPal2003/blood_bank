@@ -24,7 +24,7 @@ from rest_framework.permissions import AllowAny
 from .serializers import EmailVerificationSerializer
 
 
-from .model import Account, Location
+from .models import Account, Location
 from .serializers import (
     AccountSerializer,
     LocationSerializer,

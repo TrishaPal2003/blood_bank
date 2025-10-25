@@ -1,4 +1,4 @@
-from .model import User, Account, Location
+from .models import User, Account, Location
 from rest_framework import serializers
 from .constant import BLOOD_GROUP_CHOICE
 

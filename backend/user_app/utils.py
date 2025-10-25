@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from user_app.model import Account
+from user_app.models import Account
 
 
 def get_available_donors(blood_group=None, location=None):

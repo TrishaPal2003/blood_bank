@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
-from .model import Account
+from .models import Account
 
 
 def create_donner_profile(sender, instance, created, **kwargs):

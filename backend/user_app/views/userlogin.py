@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import GenericAPIView
-
 from ..serializers import UserLoginSerializer
 
 @extend_schema(request=UserLoginSerializer)

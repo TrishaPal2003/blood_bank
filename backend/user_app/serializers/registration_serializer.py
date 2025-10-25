@@ -1,30 +1,6 @@
-from .models import User, Account, Location
+from ..models import User, Account
 from rest_framework import serializers
-from .constant import BLOOD_GROUP_CHOICE
-
-
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = ["id", "district_name"]
-
-
-class AccountSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()  # returns username instead of user id
-    location = LocationSerializer(read_only=True)
-
-    class Meta:
-        model = Account
-        fields = [
-            "id",
-            "user",
-            "blood_group",
-            "adress",
-            "last_donation_date",
-            "is_available",
-            "location",
-        ]
+from ..constant import BLOOD_GROUP_CHOICE
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -79,36 +55,3 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 class EmailVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
-
-
-class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True)
-
-
-class LogoutSerializer(serializers.Serializer):
-    refresh = serializers.CharField(
-        help_text="Refresh token to blacklist during logout"
-    )
-
-
-class DonorSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source="user.username", read_only=True)
-    email = serializers.EmailField(source="user.email", read_only=True)
-
-    class Meta:
-        model = Account
-        fields = "__all__"
-
-
-class DonorAvailabilitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Account
-        fields = ["is_available"]
-
-    def update(self, instance, validated_data):
-        instance.is_available = validated_data.get(
-            "is_available", instance.is_available
-        )
-        instance.save()
-        return instance

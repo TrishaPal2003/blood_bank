@@ -11,6 +11,7 @@ const DonorCard = ({ donor }) => {
       />
 
       {/* Donor Info */}
+      <div className="items-center">
       <p><span className="font-bold">Name:</span> {donor.name}</p>
       <p>
         <span className="font-bold">Group:</span>{" "}
@@ -19,6 +20,7 @@ const DonorCard = ({ donor }) => {
         </span>
       </p>
       <p><span className="font-bold">District:</span> {donor.district}</p>
+      </div>
     </div>
   );
 };

@@ -1,149 +1,201 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
-export default function RegisterForm() {
+const Register = () => {
   const navigate = useNavigate();
-
-  const [form, setForm] = useState({  
-    username: '',
-    email: '',
-    password: '',
-    confirm_password: '',
-    blood_group: '',
+  const [form, setForm] = useState({
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+    blood_group: "",
+    role: "donor",
   });
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = async e => {
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
     if (form.password !== form.confirm_password) {
-      toast.error("Passwords do not match");
+      setMessage("❌ Passwords do not match");
       return;
     }
 
-    try {
-      const res = await axios.post('http://127.0.0.1:8000/api/users/register/', {
-        username: form.username,
-        email: form.email,
-        password: form.password,
-        confirm_password: form.confirm_password,  
-        blood_group: form.blood_group,
-      });
-      console.log(res);
+    setLoading(true);
 
-      if (res.status === 201 || res.status === 200) {
-        toast.success("Registration successful!");
-        navigate('/');
+    try {
+      // 1️⃣ Register user
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/users/register/",
+        form
+      );
+
+      setMessage("✅ Registration successful! Logging in...");
+
+      // 2️⃣ Auto-login
+      const loginRes = await axios.post(
+        "http://127.0.0.1:8000/api/users/login/",
+        {
+          username: form.username,
+          password: form.password,
+        }
+      );
+
+      const token = loginRes.data.access; // SimpleJWT returns "access"
+      if (token) localStorage.setItem("token", token);
+
+      // 3️⃣ Redirect based on role
+      switch (form.role) {
+        case "donor":
+          navigate("/dashboard/donor/");
+          break;
+        case "hospital":
+          navigate("/dashboard/hospital/");
+          break;
+        case "requester":
+          navigate("/dashboard/requester/");
+          break;
+        default:
+          navigate("/profile");
       }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.detail || "Registration failed");
+    } catch (err) {
+      console.error("Registration/Login Error:", err.response?.data || err.message);
+      const detail = err.response?.data?.detail || JSON.stringify(err.response?.data);
+      setMessage("❌ " + detail);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-red-50 flex items-center justify-center">
-      <div className="flex items-center justify-between w-[90%] max-w-5xl bg-white p-8 rounded-xl shadow-xl">
-        <div className="w-1/2 pr-8">
-          <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">Register</h2>
+      <div className="bg-white p-8 rounded-lg shadow-md w-[450px]">
+        <h2 className="text-2xl font-bold text-center mb-4 text-red-700">
+          Register
+        </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Username</label>
-              <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                value={form.username}
-                onChange={handleChange}
-                className="w-full border bg-white px-3 py-2 rounded"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Email</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                className="w-full border bg-white px-3 py-2 rounded"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Password</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                className="w-full border bg-white px-3 py-2 rounded"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirm_password"
-                placeholder="Confirm Password"
-                value={form.confirm_password}
-                onChange={handleChange}
-                className="w-full border px-3 bg-white py-2 rounded"
-                required
-              />
-            </div>
-
-            <div>
-  <label className="block text-gray-700 font-medium mb-1">Blood Group</label>
-  <select
-    name="blood_group"
-    value={form.blood_group}
-    onChange={handleChange}
-    className="w-full border bg-white text-gray-500 px-3 py-2 rounded"
-    required
-  >
-    <option value="">Select blood group</option>
-    <option value="A+">A+</option>
-    <option value="A-">A-</option>
-    <option value="B+">B+</option>
-    <option value="B-">B-</option>
-    <option value="AB+">AB+</option>
-    <option value="AB-">AB-</option>
-    <option value="O+">O+</option>
-    <option value="O-">O-</option>
-  </select>
-</div>
-
-            <button
-              type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-md shadow-md transition duration-200"
-            >
-              Register
-            </button>
-          </form>
-        </div>
-
-        <div className="w-1/2 flex justify-center">
-          <img
-            src="/register.png"
-            alt="Register illustration"
-            className="min-h-[50vh] object-contain"
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
           />
-        </div>
+          <input
+            type="text"
+            name="first_name"
+            placeholder="First Name"
+            value={form.first_name}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+          <input
+            type="text"
+            name="last_name"
+            placeholder="Last Name"
+            value={form.last_name}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+          <input
+            type="password"
+            name="confirm_password"
+            placeholder="Confirm Password"
+            value={form.confirm_password}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          />
+
+          <select
+            name="blood_group"
+            value={form.blood_group}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          >
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+            required
+          >
+            <option value="donor">Donor</option>
+            <option value="hospital">Hospital</option>
+            <option value="requester">Requester</option>
+          </select>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-2 text-white rounded font-semibold transition ${
+              loading ? "bg-gray-500" : "bg-red-600 hover:bg-red-700"
+            }`}
+          >
+            {loading ? "Processing..." : "Register"}
+          </button>
+        </form>
+
+        {message && (
+          <p
+            className={`mt-4 text-center text-sm font-medium ${
+              message.startsWith("✅")
+                ? "text-green-600"
+                : message.startsWith("❌")
+                ? "text-red-600"
+                : "text-yellow-600"
+            }`}
+          >
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default Register;

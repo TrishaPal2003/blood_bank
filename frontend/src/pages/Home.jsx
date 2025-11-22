@@ -1,10 +1,43 @@
-import React from 'react';
+// import React from 'react';
 import BodyImg from "../assets/blood.png";
 import { FaUserFriends, FaMapMarkerAlt } from "react-icons/fa";
 import { GiDropletSplash } from "react-icons/gi";
+import React, { useState } from "react";
 
+const mockDonors = [
+  { id: 1, name: "Oronno Anam", blood_group: "AB+", district: "Dhaka" },
+  { id: 2, name: "Maksudur Rahman", blood_group: "B+", district: "Brahmanbaria" },
+  { id: 3, name: "Obaydul Ahmed Faraz", blood_group: "O+", district: "Munshiganj" },
+  { id: 4, name: "Aditi", blood_group: "B+", district: "Dhaka" },
+  { id: 5, name: "Md. Mehedi Hassan", blood_group: "O+", district: "Dhaka" },
+  { id: 6, name: "Ali Ahsan", blood_group: "O+", district: "Sylhet" },
+];
 
 const Home = () => {
+
+  const [filters, setFilters] = useState({
+      blood_group: "",
+      district: "",
+      date: "",
+      donor_type: "All",
+    });
+  
+    const [filteredDonors, setFilteredDonors] = useState(mockDonors);
+  
+    const handleChange = (e) => {
+      setFilters({ ...filters, [e.target.name]: e.target.value });
+    };
+  
+    const handleSearch = (e) => {
+      e.preventDefault();
+      const result = mockDonors.filter((donor) => {
+        return (
+          (!filters.blood_group || donor.blood_group === filters.blood_group) &&
+          (!filters.district || donor.district === filters.district)
+        );
+      });
+      setFilteredDonors(result);
+    };
   return (
     <main >
       
@@ -33,13 +66,13 @@ const Home = () => {
 
 
       <div className=' py-12  md:px-10' >
-    <h2 className="text-4xl font-bold text-red-700 mb-6 text-center">What is Rokto?</h2>
+    <h2 className="text-4xl font-bold text-black mb-6 text-center">What is Rokto?</h2>
     <p className="text-lg text-gray-700 text-center max-w-3xl mx-auto ">
       Rokto is an automated blood service that connects blood searchers with voluntary donors in a moment through SMS. 
       Rokto is always a free service for all.
     </p>
 
-    <h3 className="text-3xl font-semibold text-red-600 mb-6 text-center mt-10">Why is Rokto?</h3>
+    <h3 className="text-3xl font-semibold text-black mb-6 text-center mt-32">Why is Rokto?</h3>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
       <div className="bg-gray-200 p-6 rounded-lg shadow hover:shadow-slate-400 ">
@@ -71,9 +104,88 @@ const Home = () => {
         Learn More
       </a>
     </div>
+    <div className="max-w-6xl mx-auto text-center mt-32">
 
-<div className="max-w-6xl mx-auto text-center">
-    <h2 className="text-3xl md:text-4xl font-bold text-red-700 mb-8 mt-10">
+      <h2 className="text-3xl md:text-4xl font-bold text-black mb-8 mt-10">
+      Search Donors
+    </h2>
+
+      <form onSubmit={handleSearch} className="flex flex-wrap gap-4 justify-center">
+
+           <div>
+        <label className="block text-gray-700 font-semibold mb-2 text-lg">
+          Blood Group
+        </label>
+          <select
+            name="blood_group"
+            onChange={handleChange}
+            className="select border-black w-48 text-gray-600 bg-white"
+          >
+            <option value="">Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+          </div>
+
+           <div>
+        <label className="block text-gray-700 font-semibold mb-2 text-lg">
+          District
+        </label>
+          <select
+            name="district"
+            onChange={handleChange}
+            className="select border-black w-48 text-gray-600 bg-white"
+          >
+            <option value="">Select District</option>
+            <option value="Dhaka">Dhaka</option>
+            <option value="Brahmanbaria">Brahmanbaria</option>
+            <option value="Munshiganj">Cumilla</option>
+            <option value="Sylhet">Sylhet</option>
+          </select>
+          </div>
+
+          <div>
+          <label className="block text-gray-700 font-semibold mb-2 text-lg ">
+          Date of Donation
+        </label>
+          <input
+            type="date"
+            name="date"
+            onChange={handleChange}
+            className="input border-black w-48 text-gray-600 bg-white"
+          />  
+          </div>
+
+           <div>
+        <label className="block text-gray-700 font-semibold mb-2 text-lg">
+          Donor Type
+        </label>
+          <select
+            name="donor_type"
+            onChange={handleChange}
+            className="select border-black w-48 text-gray-600 bg-white"
+          >
+            <option>All</option>
+            <option>Eligible</option>
+          </select>
+          </div>
+
+          <button type="submit" className="btn bg-red-700 text-white shadow-lg hover:bg-red-600 mt-9">
+            Search Donors
+          </button>
+        </form>
+
+
+    </div>
+
+<div className="max-w-6xl mx-auto text-center mt-32">
+    <h2 className="text-3xl md:text-4xl font-bold text-black mb-8 mt-10">
       We're a network of
     </h2>
 

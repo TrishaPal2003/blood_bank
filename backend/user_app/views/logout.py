@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..serializers import LogoutSerializer
+from ..serializers.auth_serializer import LogoutSerializer
 
 
 @permission_classes([IsAuthenticated])

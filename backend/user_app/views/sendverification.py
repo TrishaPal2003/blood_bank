@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema
-from ..serializers import EmailVerificationSerializer
+from ..serializers.account_serializer import AccountSerializer
 
 User = get_user_model()
 
@@ -16,9 +16,9 @@ User = get_user_model()
 class SendVerificationEmailApiView(APIView):
     permission_classes = [AllowAny]
 
-    @extend_schema(request=EmailVerificationSerializer, responses={200: dict})
+    @extend_schema(request=AccountSerializer, responses={200: dict})
     def post(self, request):
-        serializer = EmailVerificationSerializer(data=request.data)
+        serializer = AccountSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
 
@@ -27,9 +27,7 @@ class SendVerificationEmailApiView(APIView):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response(
-                {"message": "No user found with this email."}, status=404
-            )
+            return Response({"message": "No user found with this email."}, status=404)
 
         if user.is_email_verified:
             return Response({"message": "Email is already verified."}, status=200)
@@ -54,5 +52,3 @@ class SendVerificationEmailApiView(APIView):
         except Exception as e:
             print("Email send failed:", e)
             return Response({"message": "Failed to send email."}, status=500)
-
-

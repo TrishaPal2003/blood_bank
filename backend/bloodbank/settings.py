@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_spectacular",
     "rest_framework_simplejwt.token_blacklist",
+    
 ]
 
 # REST_FRAMEWORK = {
@@ -79,14 +80,15 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # must come before CommonMiddleware
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
 ]
+
 
 ROOT_URLCONF = "bloodbank.urls"
 
@@ -192,11 +194,12 @@ else:
     DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-CORS_ALLOW_ALL_ORIGINS = True  # Open to all
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 AUTH_USER_MODEL = "user_app.User"

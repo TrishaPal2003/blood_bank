@@ -1,14 +1,10 @@
-from rest_framework import viewsets, permissions, status
-from rest_framework.response import Response
-from django.contrib.auth.models import User
+from rest_framework import viewsets, permissions
 from django.core.mail import send_mail
 from django.conf import settings
 
 from .models import BloodRequest, DonationHistory
 from .serializers import BloodRequestSerializer, DonationHistorySerializer
-from .permissions import IsHospitalOrReadOnly, IsAdminForStatusChange
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import filters
 from user_app.utils import get_available_donors
 
 

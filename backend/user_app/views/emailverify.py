@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 
+
 class VerifyEmailApiView(APIView):
     permission_classes = [AllowAny]
 

@@ -30,5 +30,3 @@ class RequesterDashboardView(APIView):
 
     def get(self, request):
         return Response({"message": "Welcome Requester!", "user_id": request.user.id})
-
-

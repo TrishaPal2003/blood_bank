@@ -2,7 +2,6 @@ from ..models import Account
 from rest_framework import serializers
 
 
-
 class DonorAvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Account

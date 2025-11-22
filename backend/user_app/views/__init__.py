@@ -7,3 +7,5 @@ from .bloodgroup import *
 from .location import *
 from .dashboard import *
 from .donor import *
+from .profile import *
+from .googlelogin import *

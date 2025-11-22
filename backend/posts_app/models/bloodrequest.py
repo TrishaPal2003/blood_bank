@@ -9,7 +9,7 @@ class BloodRequest(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         limit_choices_to={"role": "hospital"},
-        null=True,  
+        null=True,
         blank=True,
     )
     blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICE)

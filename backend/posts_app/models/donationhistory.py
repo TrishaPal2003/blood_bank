@@ -1,4 +1,3 @@
-
 from django.conf import settings
 from django.db import models
 from user_app.constant import BLOOD_GROUP_CHOICE

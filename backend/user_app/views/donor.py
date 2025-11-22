@@ -1,9 +1,10 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from ..models import Account
-from ..serializers import AccountSerializer, DonorAvailabilitySerializer
+from ..serializers.donorability_serializer import DonorAvailabilitySerializer
 from ..utils import get_available_donors
 from ..permissions import IsDonor
+from ..serializers.account_serializer import AccountSerializer
 
 
 class DonorListView(generics.ListAPIView):

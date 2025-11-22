@@ -1,12 +1,12 @@
 // Layout.jsx
-import Navbar from './Navbar'
+import RoleNavbar from "./Navbar/RoleNavbar"; 
 import Footer from './Footer'
 import { Outlet } from 'react-router-dom'
 
 export default function Layout() {
   return (
     <>
-      <Navbar />
+      <RoleNavbar />
       <main className="min-h-screen bg-white">
         <Outlet />
       </main>

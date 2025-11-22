@@ -1,98 +1,39 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaMapMarkerAlt, FaTint, FaCalendarAlt, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-
+import React, { useEffect, useState } from "react";
+import DonorProfile from "../components/Profile/DonorProfile";
+import HospitalProfile from "../components/Profile/HospitalProfile";
+import RequesterProfile from "../components/Profile/RequesterProfile";
+import api from "../services/api";
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const [profileData, setProfileData] = useState(null);
-
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
+    api.get("/users/profile/")
+      .then((res) => {
+        setProfile(res.data);
+        console.log(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Profile fetch error:", err);
+        setLoading(false);
+      });
+  }, []);
 
-    axios.get("http://127.0.0.1:8000/api/users/profile/", {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    })
-    .then((res) => {
-      console.log("Profile Data", res.data);
-      setProfileData(res.data); // ⬅️ Store profile info
-    })
-    .catch((err) => {
-      console.log("Error Found", err);
-      navigate("/login"); // Redirect if token is invalid
-    });
-  },);
+  if (loading) return <div className="text-center mt-20">Loading profile...</div>;
+  if (!profile) return <div className="text-center mt-20 text-red-500">Failed to load profile.</div>;
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  return (
-    <div className="p-8 max-w-3xl mx-auto bg-white rounded-xl shadow-2xl mt-12">
-      <div className="flex items-center space-x-6 mb-8">
-        {/* <img
-          src="/avatar.png" // Replace with real profile pic if available
-          alt="Profile"
-          className="w-24 h-24 rounded-full border-4 border-red-500 object-cover"
-        /> */}
-        <div>
-          <h1 className="text-3xl font-bold text-red-600">{profileData?.user?.username}</h1>
-          <p className="text-gray-600">{profileData?.user?.email}</p>
-        </div>
-      </div>
-
-      <div className="space-y-4 text-gray-700">
-        <div className="flex items-center">
-          <FaUser className="mr-3 text-red-500" />
-          <span><strong>Full Name:</strong> {profileData?.user?.first_name} {profileData?.user?.last_name}</span>
-        </div>
-
-        <div className="flex items-center">
-          <FaEnvelope className="mr-3 text-red-500" />
-          <span><strong>Email:</strong> {profileData?.user?.email}</span>
-        </div>
-
-        <div className="flex items-center">
-          <FaMapMarkerAlt className="mr-3 text-red-500" />
-          <span><strong>Address:</strong> {profileData?.adress}</span>
-        </div>
-
-        <div className="flex items-center">
-          <FaTint className="mr-3 text-red-500" />
-          <span><strong>Blood Group:</strong> {profileData?.blood_group}</span>
-        </div>
-
-        <div className="flex items-center">
-          <FaCalendarAlt className="mr-3 text-red-500" />
-          <span><strong>Last Donation Date:</strong> {profileData?.last_donation_date || "N/A"}</span>
-        </div>
-
-        <div className="flex items-center">
-          {profileData?.is_available ? (
-            <FaCheckCircle className="mr-3 text-green-600" />
-          ) : (
-            <FaTimesCircle className="mr-3 text-gray-500" />
-          )}
-          <span><strong>Available for Donation:</strong> {profileData?.is_available ? "Yes" : "No"}</span>
-        </div>
-      </div>
-
-      <button
-        className="mt-8 bg-red-600 hover:bg-red-700 transition duration-200 text-white px-6 py-2 rounded-lg shadow-md w-full font-semibold"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
-    </div>
-  );
+  switch (profile.role) {
+    case "donor":
+      return <DonorProfile data={profile} />;
+    case "hospital":
+      return <HospitalProfile data={profile} />;
+    case "requester":
+      return <RequesterProfile data={profile} />;
+    default:
+      return <div>Invalid role</div>;
+  }
 };
 
 export default Profile;

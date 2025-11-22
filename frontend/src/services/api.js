@@ -1,16 +1,45 @@
-// src/services/api.js
-
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-export const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
+const API = axios.create({
+  // baseURL: "https://narayanpur-high-school.onrender.com/api",
+  baseURL: "http://127.0.0.1:8000/api",
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Token ${token}`;
-  return config;
-});
+// 🔹 Attach token on every request
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// 🔹 Handle 401 -> refresh
+API.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken) {
+        try {
+          const res = await API.post("/user/token/refresh/", { refresh: refreshToken });
+          const newAccess = res.data.access;
+          localStorage.setItem("token", newAccess);
+          originalRequest.headers.Authorization = `Bearer ${newAccess}`;
+          return API(originalRequest);
+        } catch {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default API;

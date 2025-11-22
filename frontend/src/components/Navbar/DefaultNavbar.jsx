@@ -1,38 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-// import axios from 'axios';
 
-const Navbar = () => {
+
+const DefaultNavbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // 🔁 Detect path changes
+  const location = useLocation(); 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
-  // 🔄 Re-check auth state on route change
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
   }, [location]);
 
-  // const handleLogout = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     await axios.post(
-  //       'http://localhost:8000/api/logout/',
-  //       {},
-  //       {
-  //         headers: {
-  //           Authorization: `Token ${token}`,
-  //         },
-  //       }
-  //     );
-  //     localStorage.removeItem("token");
-  //     localStorage.removeItem("user");
-  //     setIsLoggedIn(false); // 🔄 Update state
-  //     navigate('/');
-  //   } catch (err) {
-  //     console.error("Logout error", err);
-  //   }
-  // };
+  const handleLogout = () => {
+    localStorage.removeItem("token"); 
+    navigate("/login");
+  };
+
+
 
   return (
     <div className="bg-red-900 text-white py-2 absolute top-0 left-0 w-full z-20 ">
@@ -53,12 +38,17 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <li><Link to="/blood-request">Posts</Link></li>
+                
                 <li><Link to="/request-blood">Blood Request</Link></li>
-                <li><Link to="/donation-history">Donation History</Link></li>
-                <li><Link to="/login">Profile</Link></li>
-
-               
+                {/* <li><Link to="/donation-history">Donation History</Link></li> */}
+                <li><Link to="/profile">Profile</Link></li>
+                 <button
+                  onClick={handleLogout}
+                  className="bg-white text-red-600 px-4 py-2 rounded-md font-semibold hover:bg-gray-100 transition"
+                >
+                  Logout
+                </button>
+                      
               </>
             )}
           </ul>
@@ -73,4 +63,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default DefaultNavbar;

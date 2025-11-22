@@ -6,6 +6,8 @@ from .views import (
     UserRegistratioApiView,
     SendVerificationEmailApiView,
     VerifyEmailApiView,
+    UserProfileView,
+    GoogleLoginView
 )
 
 urlpatterns = [
@@ -21,9 +23,11 @@ urlpatterns = [
         VerifyEmailApiView.as_view(),
         name="verify-email",
     ),
+   
     # JWT Login & Refresh
-    path("api/users/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/users/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("google-login/", GoogleLoginView.as_view(), name="google-login"),
     # Logout
     path("logout/", views.LogoutView.as_view(), name="logout"),
     # Lists
@@ -52,4 +56,6 @@ urlpatterns = [
         DonorAvailabilityUpdateView.as_view(),
         name="donor-availability",
     ),
+    path("profile/", views.UserProfileView.as_view(), name="user-profile"),
+
 ]

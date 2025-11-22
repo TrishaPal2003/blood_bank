@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     ROLE_CHOICES = (
         ("admin", "Admin"),
@@ -10,6 +11,7 @@ class User(AbstractUser):
     )
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="requester")
+    blood_group = models.CharField(max_length=5, blank=True, null=True) 
 
     # Optional email verification
     is_email_verified = models.BooleanField(default=False)

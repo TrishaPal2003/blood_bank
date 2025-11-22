@@ -4,6 +4,7 @@ from .user import User
 from .location import Location
 from ..constant import BLOOD_GROUP_CHOICE
 
+
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     adress = models.TextField(null=True, blank=True)

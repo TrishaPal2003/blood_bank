@@ -1,9 +1,9 @@
 import React from "react";
-import HospitalNavbar from "../Navbar/HospitalNavbar";
+import Navbar from "../Navbar/Navbar";
 
 const HospitalProfile = ({ data }) => (
   <div className="min-h-screen bg-gray-50">
-    <HospitalNavbar />
+    <Navbar />
     <div className="max-w-4xl mx-auto mt-10 bg-white shadow-md rounded-2xl p-6">
       <h2 className="text-2xl font-semibold text-blue-700 mb-4">
         Hospital Profile

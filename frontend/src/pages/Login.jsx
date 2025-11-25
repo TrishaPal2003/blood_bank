@@ -11,21 +11,27 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleManualLogin = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const payload = { username, password };
-      const res = await axios.post("http://127.0.0.1:8000/api/users/login/", payload);
-      localStorage.setItem("token", res.data.access);
-      localStorage.setItem("refresh", res.data.refresh);
-      navigate("/profile");
-    } catch (err) {
-      setError(err.response?.data?.detail || "Invalid credentials");
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleManualLogin = async () => {
+  setLoading(true);
+  setError("");
+  try {
+    const payload = { username, password };
+    const res = await axios.post("http://127.0.0.1:8000/api/users/login/", payload);
+
+    // store token
+    localStorage.setItem("token", res.data.token);
+
+    // store role for navbar
+    localStorage.setItem("user", JSON.stringify({ role: res.data.role }));
+
+    navigate("/profile");
+  } catch (err) {
+    setError(err.response?.data?.error || "Invalid credentials");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleGoogleLogin = async (credentialResponse) => {
     setLoading(true);

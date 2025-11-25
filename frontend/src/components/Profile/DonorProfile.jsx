@@ -1,11 +1,10 @@
 import React from "react";
-// import Navbar from "../Navbar/Navbar";
 import Navbar from "../Navbar/Navbar";
 
 const DonorProfile = ({ data }) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <DonorNavbar />
       <div className="max-w-4xl mx-auto mt-10 bg-white shadow-md rounded-2xl p-6">
         <h2 className="text-2xl font-semibold text-red-600 mb-4">
           Donor Profile

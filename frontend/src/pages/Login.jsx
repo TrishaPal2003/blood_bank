@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode"; 
+import { userSchema } from "../validation/uservalidation";
+import * as yup from "yup"
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +17,9 @@ const Login = () => {
   setLoading(true);
   setError("");
   try {
+    
+    await userSchema.validate({ username, password });
+
     const payload = { username, password };
     const res = await axios.post("http://127.0.0.1:8000/api/users/login/", payload);
 
@@ -26,7 +31,12 @@ const Login = () => {
 
     navigate("/profile");
   } catch (err) {
-    setError(err.response?.data?.error || "Invalid credentials");
+    
+    if (err.name === "ValidationError") {
+      setError(err.message);
+    } else {
+      setError(err.response?.data?.error || "Invalid credentials");
+    }
   } finally {
     setLoading(false);
   }

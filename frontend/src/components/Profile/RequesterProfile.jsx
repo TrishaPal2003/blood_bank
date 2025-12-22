@@ -2,10 +2,11 @@ import React from "react";
 import Navbar from "../Navbar/Navbar";
 
 const RequesterProfile = ({ data }) => {
+  console.log(data)
   return (
     <div className="flex min-h-screen bg-gray-100">
 
-     
+      {/* Sidebar */}
       <aside className="w-72 bg-white border-r shadow-lg px-6 py-8 hidden md:block">
         <h1 className="text-2xl font-bold text-green-700 mb-8 mt-10">
           Requester Panel
@@ -18,7 +19,7 @@ const RequesterProfile = ({ data }) => {
               className="block py-3 px-4 rounded-lg hover:bg-green-50 hover:text-green-700 font-medium"
             >
               Dashboard
-            </a>  
+            </a>
           </li>
 
           <li>
@@ -38,18 +39,14 @@ const RequesterProfile = ({ data }) => {
               My Requests
             </a>
           </li>
-
-         
         </ul>
       </aside>
 
-     
+      {/* Main Content */}
       <div className="flex-1 px-6 md:px-12 py-6 md:py-10">
 
-        {/* Navbar */}
         <Navbar />
 
-        {/* Profile Card */}
         <div className="bg-white mt-10 shadow-lg rounded-2xl p-8 max-w-4xl mx-auto">
 
           <h2 className="text-3xl font-semibold text-green-700 mb-3">
@@ -62,11 +59,11 @@ const RequesterProfile = ({ data }) => {
           {/* GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            {/* Name */}
+            {/* Username */}
             <div className="bg-gray-50 border rounded-xl p-5">
               <p className="text-sm text-gray-500">Name</p>
               <p className="text-lg font-semibold text-gray-800 mt-1">
-                {data.username}
+                {data?.username}
               </p>
             </div>
 
@@ -74,38 +71,46 @@ const RequesterProfile = ({ data }) => {
             <div className="bg-gray-50 border rounded-xl p-5">
               <p className="text-sm text-gray-500">Email</p>
               <p className="text-lg font-semibold text-gray-800 mt-1">
-                {data.email}
+                {data?.email}
               </p>
             </div>
 
-            {/* Blood Needed */}
+            {/* Blood Group */}
             <div className="bg-gray-50 border rounded-xl p-5">
-              <p className="text-sm text-gray-500">Blood Needed</p>
+              <p className="text-sm text-gray-500">Blood Group</p>
               <p className="text-lg font-semibold text-gray-800 mt-1">
-                {data.requested_blood_group || "Not Specified"}
+                {data?.account?.blood_group || "Not Specified"}
               </p>
             </div>
 
-            {/* Status */}
+            {/* Status (no field in backend so default) */}
             <div className="bg-gray-50 border rounded-xl p-5">
               <p className="text-sm text-gray-500">Request Status</p>
 
               <span
                 className={`mt-2 inline-block px-4 py-1 rounded-full text-sm font-medium ${
-                  data.active_request
+                  data?.active_request
                     ? "bg-green-100 text-green-700"
                     : "bg-gray-200 text-gray-600"
                 }`}
               >
-                {data.active_request ? "Active" : "No Active Request"}
+                {data?.active_request ? "Active" : "No Active Request"}
               </span>
             </div>
 
-            {/* Address (Full Width) */}
+            {/* Address */}
             <div className="bg-gray-50 border rounded-xl p-5 md:col-span-2">
               <p className="text-sm text-gray-500">Address</p>
               <p className="text-lg font-semibold text-gray-800 mt-1">
-                {data.address}
+                {data?.account?.address || "No Address Provided"}
+              </p>
+            </div>
+
+            {/* District */}
+            <div className="bg-gray-50 border rounded-xl p-5 md:col-span-2">
+              <p className="text-sm text-gray-500">District</p>
+              <p className="text-lg font-semibold text-gray-800 mt-1">
+                {data?.account?.location?.district_name || "Unknown"}
               </p>
             </div>
           </div>

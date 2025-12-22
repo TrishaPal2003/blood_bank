@@ -1,11 +1,16 @@
-from ..models import Account
+
 from rest_framework import serializers
+from ..models.user import User
+from .account_serializer import AccountSerializer
 
 
+
+
+# Donor serializer
 class DonorSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source="user.username", read_only=True)
-    email = serializers.EmailField(source="user.email", read_only=True)
+    account = AccountSerializer(read_only=True)
 
     class Meta:
-        model = Account
-        fields = "__all__"
+        model = User
+        fields = ["id", "username", "email", "role", "blood_group", "account"]
+

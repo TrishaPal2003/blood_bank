@@ -11,7 +11,14 @@ class User(AbstractUser):
     )
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="requester")
-    blood_group = models.CharField(max_length=5, blank=True, null=True) 
+
+    # Hospital-specific fields
+    hospital_name = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+
+    
+    blood_group = models.CharField(max_length=5, blank=True, null=True)
 
     # Optional email verification
     is_email_verified = models.BooleanField(default=False)

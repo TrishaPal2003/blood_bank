@@ -7,23 +7,49 @@ import api from "../services/api";
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    api.get("/users/profile/")
-      .then((res) => {
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get("/users/profile/");
         setProfile(res.data);
-        console.log(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Profile fetch error:", err);
+        setError("Failed to load profile. Please try again.");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchProfile();
   }, []);
 
-  if (loading) return <div className="text-center mt-20">Loading profile...</div>;
-  if (!profile) return <div className="text-center mt-20 text-red-500">Failed to load profile.</div>;
+  if (loading) {
+    return (
+      <div className="text-center mt-20 text-gray-600">
+        Loading profile...
+      </div>
+    );
+  }
 
+  if (error) {
+    return (
+      <div className="text-center mt-20 text-red-500">
+        {error}
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="text-center mt-20 text-red-500">
+        No profile data found.
+      </div>
+    );
+  }
+
+  // Role-based rendering
   switch (profile.role) {
     case "donor":
       return <DonorProfile data={profile} />;
@@ -32,7 +58,11 @@ const Profile = () => {
     case "requester":
       return <RequesterProfile data={profile} />;
     default:
-      return <div>Invalid role</div>;
+      return (
+        <div className="text-center mt-20 text-red-500">
+          Invalid role: {profile.role}
+        </div>
+      );
   }
 };
 

@@ -7,12 +7,12 @@ import BloodPostForm from './pages/BloodPostForm';
 import Profile from './pages/Profile';
 import Layout from './components/Layout'; 
 import SearchDonor from "./pages/SearchDonor";
-import RoleNavbar from "./components/Navbar/RoleNavbar";
+// import Navbar from "./components/Navbar/Navbar";
 
 function App() {
   return (
     <Router>
-      <RoleNavbar />
+      {/* <Navbar /> */}
       <Routes>
         {/* All pages that should have Navbar + Footer go under Layout */}
         <Route path="/" element={<Layout />}>

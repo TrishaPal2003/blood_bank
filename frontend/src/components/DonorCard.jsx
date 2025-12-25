@@ -12,14 +12,14 @@ const DonorCard = ({ donor }) => {
 
       {/* Donor Info */}
       <div className="items-center">
-      <p><span className="font-bold">Name:</span> {donor.name}</p>
+      <p><span className="font-bold">Name:</span> {donor.username}</p>
       <p>
         <span className="font-bold">Group:</span>{" "}
         <span className="text-red-500">
           <i className="fa-solid fa-droplet"></i> {donor.blood_group}
         </span>
       </p>
-      <p><span className="font-bold">District:</span> {donor.district}</p>
+      <p><span className="font-bold">District:</span> {donor.district_name}</p>
       </div>
     </div>
   );

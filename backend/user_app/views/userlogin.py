@@ -18,7 +18,7 @@ class UserLogin(GenericAPIView):
         username = serializer.validated_data["username"]
         password = serializer.validated_data["password"]
         user = authenticate(username=username, password=password)
-
+        print(username," ", password)
         if not user:
             return Response(
                 {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED

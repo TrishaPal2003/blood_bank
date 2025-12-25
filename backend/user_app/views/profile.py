@@ -5,10 +5,11 @@ from ..serializers.account_serializer import AccountSerializer
 from ..serializers.request_serializer import RequesterSerializer
 from ..serializers.donor_serializer import DonorSerializer
 from ..serializers.hospital_serializer import HospitalSerializer
+from rest_framework.permissions import AllowAny
 
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
-
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def get(self, request):
         user = request.user
         if user.role == "donor":

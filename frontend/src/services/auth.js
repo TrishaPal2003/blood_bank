@@ -1,27 +1,35 @@
-import { api } from "./api";
+import API from "./api";
 
 // Register
-export const registerUser = (data) => api.post("/users/register/", data);
+export const registerUser = (data) => API.post("/register/", data);
 
 // Login
-export const loginUser = (data) => api.post("/users/login/", data);
+export const loginUser = async (data) => {
+  const res = await API.post("/login/", data);
 
-// Set auth data
-export const setAuthData = (access, refresh, user) => {
-  localStorage.setItem("access", access);
-  localStorage.setItem("refresh", refresh);
-  localStorage.setItem("user", JSON.stringify(user)); // store username, role, etc.
+  // Store tokens
+  localStorage.setItem("access", res.data.access);
+  localStorage.setItem("refresh", res.data.refresh);
+
+  return res.data;
 };
 
-// Clear auth data
-export const clearAuthData = () => {
-  localStorage.removeItem("access");
-  localStorage.removeItem("refresh");
-  localStorage.removeItem("user");
+// Logout
+export const logoutUser = async () => {
+  try {
+    await API.post("/logout/");
+  } finally {
+    localStorage.clear();
+    window.location.href = "/login";
+  }
 };
 
-// Check authentication
+// Auth helpers
 export const isAuthenticated = () => !!localStorage.getItem("access");
 
-// Get token
 export const getAccessToken = () => localStorage.getItem("access");
+
+export const getUser = () => {
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
+};

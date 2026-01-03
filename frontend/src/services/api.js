@@ -24,10 +24,10 @@ API.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = localStorage.getItem("refresh");
       if (refreshToken) {
         try {
-          const res = await API.post("/user/token/refresh/", { refresh: refreshToken });
+          const res = await API.post("/users/refresh/", { refresh: refreshToken });
           const newAccess = res.data.access;
           localStorage.setItem("token", newAccess);
           originalRequest.headers.Authorization = `Bearer ${newAccess}`;

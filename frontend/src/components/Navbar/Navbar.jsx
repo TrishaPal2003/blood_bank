@@ -7,7 +7,8 @@ const Navbar = () => {
   const location = useLocation();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
+  const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,93 +18,135 @@ const Navbar = () => {
 
     if (storedUser) {
       try {
-        const user = JSON.parse(storedUser);
-        setRole(user?.role || null);
-      } catch (error) {
-        setRole(null);
+        setUser(JSON.parse(storedUser));
+      } catch {
+        setUser(null);
       }
     } else {
-      setRole(null);
+      setUser(null);
     }
+
+    setOpen(false); // close menu on route change
   }, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.clear();
     navigate("/login");
   };
 
-  // ⭐ SWITCH-CASE MENU LOGIC
-  const renderMenuByRole = () => {
-    switch (role) {
-      case "donor":
-        return (
-          <>
-            <li><Link to="/donor/dashboard">Dashboard</Link></li>
-            <li><Link to="/donor/history">Donation History</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
-            <li><button onClick={handleLogout}>Logout</button></li>
-          </>
-        );
+  /* ---------- NAV SECTIONS ---------- */
 
-      case "hospital":
-        return (
-          <>
-            <li><Link to="/hospital/dashboard">Dashboard</Link></li>
-            <li><Link to="/hospital/requests">Manage Requests</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
-            <li><button onClick={handleLogout}>Logout</button></li>
-          </>
-        );
+  const publicLinks = (
+    <>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/about">About</Link></li>
+      <li><Link to="/search-donor">Search Donor</Link></li>
+      <li><Link to="/request-blood">Request Blood</Link></li>
+    </>
+  );
 
-      case "requester":
-        return (
-          <>
-            <li><Link to="/requester/dashboard">Dashboard</Link></li>
-            <li><Link to="/request-blood">Request Blood</Link></li>
-            <li><Link to="/profile">Profile</Link></li>
-            <li><button onClick={handleLogout}>Logout</button></li>
-          </>
-        );
+  const userLinks = (
+    <>
+      <li><Link to="/dashboard">Dashboard</Link></li>
+      <li><Link to="/requests">Requests</Link></li>
+      <li><Link to="/my-requests">My Requests</Link></li>
+      <li><Link to="/profile">Profile</Link></li>
+    </>
+  );
 
-      default:
-        return (
-          <>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About Us</Link></li>
-            <li><Link to="/search-donor">Search Donor</Link></li>
+  const hospitalLinks = (
+    <>
+      <li><Link to="/dashboard">Dashboard</Link></li>
+      <li><Link to="/my-requests">Manage Requests</Link></li>
+      <li><Link to="/requests">All Requests</Link></li>
+      <li><Link to="/profile">Profile</Link></li>
+    </>
+  );
 
-            {!isLoggedIn && (
-              <>
-                <li><Link to="/register">Register</Link></li>
-                <li><Link to="/login">Login</Link></li>
-              </>
-            )}
-            {isLoggedIn && (
-              <>
-                <li><Link to="/profile">Profile</Link></li>
-                <li><button onClick={handleLogout}>Logout</button></li>
-              </>
-            )}
-          </>
-        );
-    }
+  const adminLinks = (
+    <>
+      <li><Link to="/admin">Admin</Link></li>
+      <li><Link to="/dashboard">Dashboard</Link></li>
+    </>
+  );
+
+  const renderLinks = () => {
+    if (!isLoggedIn) return publicLinks;
+
+    if (user?.isAdmin) return adminLinks;
+    if (user?.isHospital) return hospitalLinks;
+
+    return userLinks; // normal user (donor + requester)
   };
 
-  return (
-    <div className="bg-red-900 text-white py-2 fixed top-0 left-0 w-full z-20">
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold uppercase">Blood Bank</h1>
+  /* ---------- UI ---------- */
 
-        <ul className="hidden md:flex space-x-8 text-lg">
-          {renderMenuByRole()}
+  return (
+    <nav className="bg-red-700 text-white fixed top-0 left-0 w-full z-20">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold uppercase">
+          Blood Bank
+        </Link>
+
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex gap-6 text-sm font-medium items-center">
+          {renderLinks()}
+
+          {!isLoggedIn && (
+            <>
+              <li><Link to="/login">Login</Link></li>
+              <li><Link to="/register">Register</Link></li>
+            </>
+          )}
+
+          {isLoggedIn && (
+            <li>
+              <button
+                onClick={handleLogout}
+                className="bg-white text-red-700 px-3 py-1 rounded hover:bg-red-100"
+              >
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
 
-        <div className="md:hidden">
-          <GiHamburgerMenu className="text-3xl cursor-pointer" />
-        </div>
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="md:hidden text-3xl"
+        >
+          <GiHamburgerMenu />
+        </button>
       </div>
-    </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <ul className="md:hidden bg-red-800 px-4 py-4 space-y-3 text-sm">
+          {renderLinks()}
+
+          {!isLoggedIn && (
+            <>
+              <li><Link to="/login">Login</Link></li>
+              <li><Link to="/register">Register</Link></li>
+            </>
+          )}
+
+          {isLoggedIn && (
+            <li>
+              <button
+                onClick={handleLogout}
+                className="bg-white text-red-700 w-full py-2 rounded"
+              >
+                Logout
+              </button>
+            </li>
+          )}
+        </ul>
+      )}
+    </nav>
   );
 };
 

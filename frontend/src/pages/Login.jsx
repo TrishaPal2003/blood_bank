@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode"; 
 import { userSchema } from "../validation/uservalidation";
+import API from "../services/api";
 import * as yup from "yup"
 
 const Login = () => {
@@ -21,10 +22,13 @@ const Login = () => {
     await userSchema.validate({ username, password });
 
     const payload = { username, password };
-    const res = await axios.post("http://127.0.0.1:8000/api/users/login/", payload);
+    console.log(payload)
+    const res = await API.post("/users/login/", payload);
+    console.log(res.data)
 
     // store token
-    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("token", res.data.access);
+    localStorage.setItem("refresh", res.data.refresh);
 
     // store role for navbar
     localStorage.setItem("user", JSON.stringify({ role: res.data.role }));
@@ -49,7 +53,7 @@ const Login = () => {
     try {
       const token = credentialResponse.credential;
       const decoded = jwtDecode(token); 
-      const res = await axios.post("http://127.0.0.1:8000/api/users/google-login/", { token });
+      const res = await API.post("/users/google-login/", { token });
       localStorage.setItem("token", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       navigate("/profile");

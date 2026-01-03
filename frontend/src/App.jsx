@@ -7,6 +7,10 @@ import BloodPostForm from './pages/BloodPostForm';
 import Profile from './pages/Profile';
 import Layout from './components/Layout'; 
 import SearchDonor from "./pages/SearchDonor";
+import RequestList from './components/request/RequestList';
+import Dashboard from './pages/Dashboard';
+
+
 // import Navbar from "./components/Navbar/Navbar";
 
 function App() {
@@ -24,6 +28,9 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path='search-donor' element={<SearchDonor/>} />
           <Route path="test" element={<h1>🔥 TEST BLOOD PAGE</h1>} />
+          <Route path="/requests" element={<RequestList />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+
 
           {/* 404 fallback for any unknown route */}
           <Route path="*" element={<h1>404 Not Found</h1>} />

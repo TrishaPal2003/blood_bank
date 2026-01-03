@@ -21,14 +21,14 @@ const BloodPostForm = ()=> {
 
     try {
       await axios.post('http://127.0.0.1:8000/api/posts/requests/', form, {
-        headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`, 
-        },
+        // headers: {
+        //   Authorization: `Token ${localStorage.getItem('token')}`, 
+        // },
       });
-      alert('✅ Blood request posted!');
+      alert(' Blood request posted!');
     } catch (err) {
       console.error("Post error:", err);
-      alert('❌ Error posting request');
+      alert(' Error posting request');
     }
     console.log("Token:", localStorage.getItem('token'));
 

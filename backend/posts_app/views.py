@@ -4,14 +4,14 @@ from django.conf import settings
 
 from .models import BloodRequest, DonationHistory
 from .serializers import BloodRequestSerializer, DonationHistorySerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from user_app.utils import get_available_donors
 
 
 class BloodRequestViewSet(viewsets.ModelViewSet):
     queryset = BloodRequest.objects.all().order_by("-created_at")
     serializer_class = BloodRequestSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
         """

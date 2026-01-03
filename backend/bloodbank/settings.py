@@ -16,6 +16,7 @@ import environ
 
 import os
 import dj_database_url
+from datetime import timedelta
 
 env = environ.Env()
 environ.Env.read_env()
@@ -75,6 +76,12 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 

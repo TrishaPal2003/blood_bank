@@ -11,10 +11,7 @@ from .views import (
     DonorListView,
     BloodGroupList,
     LocationListView,
-    AdminDashboardView,
-    HospitalDashboardView,
-    DonorDashboardView,
-    RequesterDashboardView,
+    DashboardView,
 )
 
 urlpatterns = [
@@ -28,10 +25,7 @@ urlpatterns = [
     path("donors/", DonorListView.as_view(), name="donor-list"),
     path("blood-groups/", BloodGroupList.as_view(), name="blood-groups"),
     path("locations/", LocationListView.as_view(), name="locations"),
-    path("dashboard/admin/", AdminDashboardView.as_view(), name="admin_dashboard"),
-    path("dashboard/hospital/", HospitalDashboardView.as_view(), name="hospital_dashboard"),
-    path("dashboard/donor/", DonorDashboardView.as_view(), name="donor_dashboard"),
-    path("dashboard/requester/", RequesterDashboardView.as_view(), name="requester_dashboard"),
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path("donor/availability/", DonorAvailabilityUpdateView.as_view(), name="donor-availability"),
     path("profile/", UserProfileView.as_view(), name="user-profile"),
 ]

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
     username: "",
     first_name: "",
@@ -11,12 +12,28 @@ const Register = () => {
     email: "",
     password: "",
     confirm_password: "",
-    blood_group: "",
     role: "donor",
+    blood_group: "",
+    phone: "",
+    location: "",
   });
 
+  const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  // Fetch locations on mount
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const res = await axios.get("http://127.0.0.1:8000/api/users/locations/");
+        setLocations(res.data); // expect [{id: 0, district_name: "string"}]
+      } catch (err) {
+        console.error("Failed to load locations:", err);
+      }
+    };
+    fetchLocations();
+  }, []);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,6 +41,12 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+
+    // Donor must have blood group
+    if (form.role === "donor" && !form.blood_group) {
+      setMessage("❌ Blood group is required for donors");
+      return;
+    }
 
     if (form.password !== form.confirm_password) {
       setMessage("❌ Passwords do not match");
@@ -33,15 +56,18 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // 1️⃣ Register user
+      // Prepare payload: only include blood_group if donor
+      const payload = { ...form };
+      if (form.role !== "donor") delete payload.blood_group;
+
       const res = await axios.post(
         "http://127.0.0.1:8000/api/users/register/",
-        form
+        payload
       );
 
       setMessage("✅ Registration successful! Logging in...");
 
-      // 2️⃣ Auto-login
+      // Auto-login
       const loginRes = await axios.post(
         "http://127.0.0.1:8000/api/users/login/",
         {
@@ -50,26 +76,15 @@ const Register = () => {
         }
       );
 
-      const token = loginRes.data.access; // SimpleJWT returns "access"
+      const token = loginRes.data.access;
       if (token) localStorage.setItem("token", token);
 
-      // 3️⃣ Redirect based on role
-      switch (form.role) {
-        case "donor":
-          navigate("/dashboard/donor/");
-          break;
-        case "hospital":
-          navigate("/dashboard/hospital/");
-          break;
-        case "requester":
-          navigate("/dashboard/requester/");
-          break;
-        default:
-          navigate("/profile");
-      }
+      navigate("/dashboard/"); // unified dashboard
     } catch (err) {
       console.error("Registration/Login Error:", err.response?.data || err.message);
-      const detail = err.response?.data?.detail || JSON.stringify(err.response?.data);
+      const detail =
+        err.response?.data?.detail ||
+        JSON.stringify(err.response?.data);
       setMessage("❌ " + detail);
     } finally {
       setLoading(false);
@@ -78,11 +93,11 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-red-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-[450px]">
-        <h2 className="text-2xl font-bold text-center mb-4 text-red-700">
-          Register
-        </h2>
+      <div className="flex items-center justify-between w-[90%] max-w-5xl bg-white p-8 rounded-xl shadow-xl">
+        <div className="w-1/2 pr-8">
+          <h2 className="text-3xl font-bold text-red-700 mb-6 text-center">Register</h2>
 
+        <div className="space-y-4">
         <form onSubmit={handleSubmit} className="space-y-3">
           <input
             type="text"
@@ -90,7 +105,7 @@ const Register = () => {
             placeholder="Username"
             value={form.username}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           />
           <input
@@ -99,7 +114,7 @@ const Register = () => {
             placeholder="First Name"
             value={form.first_name}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           />
           <input
@@ -108,7 +123,7 @@ const Register = () => {
             placeholder="Last Name"
             value={form.last_name}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           />
           <input
@@ -117,7 +132,7 @@ const Register = () => {
             placeholder="Email"
             value={form.email}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           />
           <input
@@ -126,7 +141,7 @@ const Register = () => {
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           />
           <input
@@ -135,38 +150,68 @@ const Register = () => {
             placeholder="Confirm Password"
             value={form.confirm_password}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           />
 
-          <select
-            name="blood_group"
-            value={form.blood_group}
+          {/* Phone */}
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone Number"
+            value={form.phone}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
-          >
-            <option value="">Select Blood Group</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-          </select>
+          />
 
+          {/* Role */}
           <select
             name="role"
             value={form.role}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
             required
           >
             <option value="donor">Donor</option>
             <option value="hospital">Hospital</option>
-            <option value="requester">Requester</option>
+          </select>
+
+          {/* Blood group - show only if donor */}
+          {form.role === "donor" && (
+            <select
+              name="blood_group"
+              value={form.blood_group}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
+              required={form.role === "donor"}
+            >
+              <option value="">Select Blood Group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          )}
+
+          {/* Location */}
+          <select
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-black text-gray-600 bg-white rounded-md shadow-sm focus:outline-none"
+            required
+          >
+            <option value="">Select Location</option>
+            {locations.map((loc) => (
+              <option key={loc.id} value={loc.id}>
+                {loc.district_name}
+              </option>
+            ))}
           </select>
 
           <button
@@ -179,6 +224,7 @@ const Register = () => {
             {loading ? "Processing..." : "Register"}
           </button>
         </form>
+        </div>
 
         {message && (
           <p
@@ -194,6 +240,10 @@ const Register = () => {
           </p>
         )}
       </div>
+      <div className="w-1/2 flex justify-center">
+          <img src="/register.png" alt="Login" className="min-h-[50vh] object-contain" />
+        </div>
+    </div>
     </div>
   );
 };

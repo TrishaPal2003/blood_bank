@@ -1,32 +1,42 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from ..permissions import IsAdmin, IsHospital, IsDonor, IsRequester
+from rest_framework.response import Response
 
 
-class AdminDashboardView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
-
-    def get(self, request):
-        return Response({"message": "Welcome Admin!", "user_id": request.user.id})
-
-
-class HospitalDashboardView(APIView):
-    permission_classes = [IsAuthenticated, IsHospital]
+class DashboardView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({"message": "Welcome Hospital!", "user_id": request.user.id})
+        user = request.user
 
+        if user.role == "admin":
+            data = {
+                "role": "admin",
+                "message": "Welcome Admin",
+                "controls": ["users", "hospitals", "reports"],
+            }
 
-class DonorDashboardView(APIView):
-    permission_classes = [IsAuthenticated, IsDonor]
+        elif user.role == "hospital":
+            data = {
+                "role": "hospital",
+                "message": "Welcome Hospital",
+                "controls": ["create_request", "view_requests"],
+            }
 
-    def get(self, request):
-        return Response({"message": "Welcome Donor!", "user_id": request.user.id})
+        elif user.role == "donor":
+            data = {
+                "role": "donor",
+                "message": "Welcome Donor",
+                "controls": ["donate_blood", "request_blood"],
+            }
 
+        else:
+            return Response(
+                {"error": "Invalid role"},
+                status=400
+            )
 
-class RequesterDashboardView(APIView):
-    permission_classes = [IsAuthenticated, IsRequester]
-
-    def get(self, request):
-        return Response({"message": "Welcome Requester!", "user_id": request.user.id})
+        return Response({
+            "user_id": user.id,
+            "dashboard": data
+        })

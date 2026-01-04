@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DonorProfile from "../components/Profile/DonorProfile";
 import HospitalProfile from "../components/Profile/HospitalProfile";
-import RequesterProfile from "../components/Profile/RequesterProfile";
+// import RequesterProfile from "../components/Profile/RequesterProfile";
 import api from "../services/api";
 
 const Profile = () => {
@@ -56,8 +56,6 @@ const Profile = () => {
       return <DonorProfile data={profile} />;
     case "hospital":
       return <HospitalProfile data={profile} />;
-    case "requester":
-      return <RequesterProfile data={profile} />;
     default:
       return (
         <div className="text-center mt-20 text-red-500">

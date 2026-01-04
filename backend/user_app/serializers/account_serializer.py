@@ -3,16 +3,18 @@ from ..models.user import User
 from ..models.accounts import Account
 from ..serializers.location_serializer import LocationSerializer
 
-
+# Account serializer for nested fields
 class AccountSerializer(serializers.ModelSerializer):
-    location = LocationSerializer(read_only=True)
+    location = LocationSerializer(read_only=True)  # if you want location info
 
     class Meta:
         model = Account
-        fields = ["address", "blood_group", "last_donation_date", "is_available", "location"]
+        fields = ["phone", "address", "blood_group", "last_donation_date", "is_available", "location"]
 
+# Hospital serializer with nested account
+class HospitalSerializer(serializers.ModelSerializer):
+    account = AccountSerializer(read_only=True)  # nest Account
 
-class UserSerializerPublic(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email", "role"]
+        fields = ["id", "hospital_name", "email", "role", "date_joined", "account"]

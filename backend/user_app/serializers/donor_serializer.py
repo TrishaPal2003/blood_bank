@@ -12,5 +12,5 @@ class DonorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "role", "blood_group", "account"]
+        fields = ["id", "username", "email", "role", "account"]
 

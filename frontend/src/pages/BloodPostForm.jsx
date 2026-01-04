@@ -41,7 +41,7 @@ return (
       className="w-full max-w-3xl p-10 space-y-6"
     >
       {/* Header */}
-     <div className="bg-red-100 text-black py-12 mb-8 w-screen relative left-1/2 right-1/2 -mx-[50vw] text-center text-5xl font-bold">
+     <div className="bg-red-100 text-black py-16 mb-8 w-screen relative left-1/2 right-1/2 -mx-[50vw] text-center text-5xl font-bold">
   Place a Blood Request
 </div>
 

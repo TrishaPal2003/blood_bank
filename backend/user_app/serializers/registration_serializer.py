@@ -1,13 +1,17 @@
-from ..models import User, Account
 from rest_framework import serializers
+from ..models import User, Account
 from ..constant import BLOOD_GROUP_CHOICE
-
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(required=True)
-    blood_group = serializers.ChoiceField(choices=BLOOD_GROUP_CHOICE)
-    ROLE_CHOICES = ("donor", "hospital", "requester")  # Admin not self-assignable
-    role = serializers.ChoiceField(choices=ROLE_CHOICES, default="requester")
+    blood_group = serializers.ChoiceField(choices=BLOOD_GROUP_CHOICE, required=False)
+    ROLE_CHOICES = ("donor", "hospital")
+    role = serializers.ChoiceField(choices=ROLE_CHOICES, default="donor")
+
+    # extra fields not in User model
+    phone = serializers.CharField(required=False, allow_blank=True)
+    address = serializers.CharField(required=False, allow_blank=True)
+    location = serializers.IntegerField(required=False)  
 
     class Meta:
         model = User
@@ -18,40 +22,47 @@ class RegistrationSerializer(serializers.ModelSerializer):
             "email",
             "password",
             "confirm_password",
-            "blood_group",
             "role",
+            "blood_group",  # handled manually
+            "phone",        # handled manually
+            "address",      # handled manually
+            "location",     # handled manually
         ]
 
     def validate(self, data):
-        # Password match
         if data["password"] != data["confirm_password"]:
             raise serializers.ValidationError({"error": "Password does not match"})
 
-        # Email uniqueness
         if User.objects.filter(email=data["email"]).exists():
             raise serializers.ValidationError({"error": "Email already exists"})
 
-        # Optional: extra role validation
-        if data["role"] not in self.ROLE_CHOICES:
-            raise serializers.ValidationError({"error": "Invalid role selected"})
+        if data["role"] == "donor" and not data.get("blood_group"):
+            raise serializers.ValidationError({"blood_group": "Blood group is required for donors"})
 
         return data
 
     def create(self, validated_data):
-        # Remove fields not needed for User model
-        validated_data.pop("confirm_password")
-        blood_group = validated_data.pop("blood_group")
+        # Pop extra fields
+        confirm_password = validated_data.pop("confirm_password")
+        blood_group = validated_data.pop("blood_group", None)
+        phone = validated_data.pop("phone", "")
+        address = validated_data.pop("address", "")
+        location_id = validated_data.pop("location", None)
         role = validated_data.pop("role")
 
-        # Create the user with role
+        # Create User
         user = User.objects.create_user(**validated_data, role=role)
 
-        # Create Account only for donor, hospital, or requester
-        if role in ["donor", "hospital", "requester"]:
-            Account.objects.create(user=user, blood_group=blood_group)
+        # Create Account
+        from ..models.location import Location
+        location = Location.objects.filter(id=location_id).first() if location_id else None
+
+        Account.objects.create(
+            user=user,
+            blood_group=blood_group if role == "donor" else None,
+            phone=phone,
+            address=address,
+            location=location
+        )
 
         return user
-
-
-class EmailVerificationSerializer(serializers.Serializer):
-    email = serializers.EmailField()

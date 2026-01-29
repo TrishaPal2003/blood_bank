@@ -50,6 +50,7 @@ const Navbar = () => {
       <li><Link to="/dashboard">Dashboard</Link></li>
       <li><Link to="/requests">Requests</Link></li>
       <li><Link to="/my-requests">My Requests</Link></li>
+      <li><Link to="/request-blood">Request Blood</Link></li>
       <li><Link to="/profile">Profile</Link></li>
     </>
   );
@@ -59,6 +60,7 @@ const Navbar = () => {
       <li><Link to="/dashboard">Dashboard</Link></li>
       <li><Link to="/my-requests">Manage Requests</Link></li>
       <li><Link to="/requests">All Requests</Link></li>
+      <li><Link to="/request-blood">Request Blood</Link></li>
       <li><Link to="/profile">Profile</Link></li>
     </>
   );

@@ -9,6 +9,8 @@ import Layout from './components/Layout';
 import SearchDonor from "./pages/SearchDonor";
 import RequestList from './components/request/RequestList';
 import Dashboard from './pages/Dashboard';
+import MyRequests from './components/request/MyRequests';
+
 
 
 // import Navbar from "./components/Navbar/Navbar";
@@ -29,7 +31,8 @@ function App() {
           <Route path='search-donor' element={<SearchDonor/>} />
           <Route path="test" element={<h1>🔥 TEST BLOOD PAGE</h1>} />
           <Route path="/requests" element={<RequestList />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/donor/dashboard" element={<Dashboard />} />
+          <Route path='/my-requests' element={<MyRequests/>} />
 
 
           {/* 404 fallback for any unknown route */}

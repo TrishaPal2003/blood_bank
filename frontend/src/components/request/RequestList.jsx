@@ -90,16 +90,18 @@ export default function RequestList() {
   }, []);
 
   const fetchRequests = async () => {
-    try {
-      setLoading(true);
-      const res = await API.get("/posts/requests/");
-      setRequests(res.data.results || []);
-    } catch (error) {
-      console.error("Failed to fetch requests", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    const res = await API.get("/posts/requests/");
+    console.log(res.data); // debug
+    setRequests(res.data || []); // <- fixed
+  } catch (error) {
+    console.error("Failed to fetch requests", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleAction = (request) => {
     console.log("Action clicked for:", request.id);

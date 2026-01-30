@@ -27,6 +27,14 @@ const DonorProfile = ({ data }) => {
               My Donations
             </a>
           </li>
+          <li>
+            <a
+              href="/my-requests"
+              className="block py-3 px-4 rounded-lg hover:bg-red-50 hover:text-red-700 font-medium"
+            >
+              My Requests
+            </a>
+          </li>
         </ul>
       </aside>
 

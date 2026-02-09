@@ -47,7 +47,10 @@ const Navbar = () => {
 
   const userLinks = (
     <>
-      <li><Link to="/donor/dashboard">Dashboard</Link></li>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/about">About</Link></li>
+      <li><Link to="/search-donor">Search Donor</Link></li>
+      {/* <li><Link to="/donor/dashboard">Dashboard</Link></li> */}
       <li><Link to="/requests">Requests</Link></li>
       {/* <li><Link to="/my-requests">My Requests</Link></li> */}
       <li><Link to="/request-blood">Request Blood</Link></li>
@@ -57,7 +60,10 @@ const Navbar = () => {
 
   const hospitalLinks = (
     <>
-      <li><Link to="/donor/dashboard">Dashboard</Link></li>
+      <li><Link to="/">Home</Link></li>
+      <li><Link to="/about">About</Link></li>
+      <li><Link to="/search-donor">Search Donor</Link></li>
+      {/* <li><Link to="/donor/dashboard">Dashboard</Link></li> */}
       {/* <li><Link to="/my-requests">Manage Requests</Link></li> */}
       <li><Link to="/requests">All Requests</Link></li>
       <li><Link to="/request-blood">Request Blood</Link></li>
@@ -103,7 +109,7 @@ const Navbar = () => {
             </>
           )}
 
-          {isLoggedIn && (
+          {/* {isLoggedIn && (
             <li>
               <button
                 onClick={handleLogout}
@@ -112,7 +118,7 @@ const Navbar = () => {
                 Logout
               </button>
             </li>
-          )}
+          )} */}
         </ul>
 
         {/* Mobile Menu Button */}

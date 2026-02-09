@@ -1,7 +1,24 @@
 import React from "react";
 import Navbar from "../Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import {
+  FiHome,
+  FiHeart,
+  FiFileText,
+  FiLogOut,
+} from "react-icons/fi";
+
+
 
 const DonorProfile = ({ data }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
 
@@ -10,32 +27,76 @@ const DonorProfile = ({ data }) => {
           Donor Panel
         </h1>
 
-        <ul className="space-y-2">
-          <li>
-            <a
-              href="/donor/dashboard"
-              className="block py-3 px-4 rounded-lg hover:bg-red-50 hover:text-red-700 font-medium"
-            >
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a
-              href="/donor/requests"
-              className="block py-3 px-4 rounded-lg hover:bg-red-50 hover:text-red-700 font-medium"
-            >
-              My Donations
-            </a>
-          </li>
-          <li>
-            <a
-              href="/my-requests"
-              className="block py-3 px-4 rounded-lg hover:bg-red-50 hover:text-red-700 font-medium"
-            >
-              My Requests
-            </a>
-          </li>
-        </ul>
+       <ul className="space-y-2">
+
+  {/* Dashboard */}
+  <li>
+    <Link
+      to="/donor/dashboard"
+      className="
+        flex items-center gap-3
+        py-3 px-4 rounded-lg
+        hover:bg-red-50 hover:text-red-700
+        font-medium transition
+      "
+    >
+      <FiHome className="text-lg" />
+      Dashboard
+    </Link>
+  </li>
+
+  {/* My Donations */}
+  <li>
+    <Link
+      to="/donor/requests"
+      className="
+        flex items-center gap-3
+        py-3 px-4 rounded-lg
+        hover:bg-red-50 hover:text-red-700
+        font-medium transition
+      "
+    >
+      <FiHeart className="text-lg" />
+      My Donations
+    </Link>
+  </li>
+
+  {/* My Requests */}
+  <li>
+    <Link
+      to="/my-requests"
+      className="
+        flex items-center gap-3
+        py-3 px-4 rounded-lg
+        hover:bg-red-50 hover:text-red-700
+        font-medium transition
+      "
+    >
+      <FiFileText className="text-lg" />
+      My Requests
+    </Link>
+  </li>
+
+  {/* Logout */}
+  <li className="pt-6 mt-6 border-t">
+    <button
+      onClick={handleLogout}
+      className="
+        w-full flex items-center justify-center gap-2
+        py-3 px-4 rounded-xl
+        bg-red-600 text-white font-semibold
+        shadow-md shadow-red-300
+        hover:bg-red-700 hover:shadow-lg
+        transition-all
+      "
+    >
+      <FiLogOut className="text-lg" />
+      Logout
+    </button>
+  </li>
+
+</ul>
+
       </aside>
 
       <div className="flex-1 px-6 md:px-12 py-6 md:py-10">

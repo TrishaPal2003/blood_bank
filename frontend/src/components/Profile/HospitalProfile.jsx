@@ -1,7 +1,15 @@
 import React from "react";
 import Navbar from "../Navbar/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const HospitalProfile = ({ data }) => {
+  const navigate = useNavigate();
+  
+    const handleLogout = () => {
+      localStorage.clear();
+      navigate("/login");
+    };
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -27,6 +35,14 @@ const HospitalProfile = ({ data }) => {
               Donation Requests
             </a>
           </li>
+          <li className="pt-6 border-t">
+        <button
+          onClick={handleLogout}
+          className="w-full py-3 px-4 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition"
+        >
+          Logout
+        </button>
+      </li>
         </ul>
       </aside>
 

@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import StatsCard from "../components/common/StatsCard.jsx";
 import API from "../services/api";
 import RequestCard from "../components/request/ RequestCard";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchDashboard();
@@ -61,15 +65,23 @@ export default function Dashboard() {
       {/* ACTION CENTER */}
       <div className="flex flex-wrap gap-4 mt-4">
         {dashboard.controls.includes("request_blood") && (
-          <button className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
-            Request Blood
-          </button>
-        )}
-        {dashboard.controls.includes("donate_blood") && (
-          <button className="border border-red-600 text-red-600 px-6 py-2 rounded-lg hover:bg-red-50 transition">
-            Donate Blood
-          </button>
-        )}
+  <button
+    onClick={() => navigate("/request-blood")}
+    className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+  >
+    Request Blood
+  </button>
+)}
+
+{dashboard.controls.includes("donate_blood") && (
+  <button
+    onClick={() => navigate("/requests")}
+    className="border border-red-600 text-red-600 px-6 py-2 rounded-lg hover:bg-red-50 transition"
+  >
+    Donate Blood
+  </button>
+)}
+
       </div>
 
       {/* MY ACTIVE REQUESTS */}

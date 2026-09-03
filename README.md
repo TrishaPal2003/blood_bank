@@ -7,7 +7,7 @@ A fullstack donation management system built with **Django REST Framework** and 
 ## 🚀 Features
 
 ### 👤 Authentication
-- Email verification for sign up (Django signals + token system)
+- Email verification for sign-up (Django signals + token system)
 - Login/logout (DRF + JWT or session-based)
 
 ### 🩸 Donor Management

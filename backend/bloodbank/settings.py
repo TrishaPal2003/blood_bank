@@ -17,21 +17,20 @@ import environ
 import os
 import dj_database_url
 
-env = environ.Env()
-environ.Env.read_env()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-d39&jfw6s6a8^tw@&bhk7m6k5bq=s*u7v!4n1#s@&4qa3t_c4i"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -118,11 +117,21 @@ WSGI_APPLICATION = "bloodbank.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.parse(
+        env("DATABASE_URL")
+    )
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": env("DATABASE_NAME"),
+#         "USER": env("DATABASE_USER"),
+#         "PASSWORD": env("DATABASE_PASSWORD", default=""),
+#         "HOST": env("DATABASE_HOST", default="localhost"),
+#         "PORT":env("DATABASE_PORT", default="5432"),
+#     }
+# }
 
 
 # Password validation
